@@ -42,14 +42,19 @@ export default function Room() {
   const roomUrl = roomSettings["url"];
 
   useEffect(() => {
-    let callFrame = DailyIFrame.createFrame(
-      document.getElementById("frame")
-    );
+    const DAILY_IFRAME = document.getElementById("frame")
+    let callFrame = DailyIFrame.wrap(DAILY_IFRAME);
     callFrame.join({ url: roomUrl })
+    callFrame.on('joined-meeting', () => {
+      setTimeout(() => {
+        callFrame.getNetworkStats().then((stats) => console.log(stats))
+      }, 15000)
+
+    })
   }, [roomUrl]);
 
   return (
-    <div id="frame">
-    </div>
+    <iframe id="frame" allow="microphone; camera; autoplay; display-capture">
+    </iframe>
   );
 }
