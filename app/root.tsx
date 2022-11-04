@@ -15,11 +15,13 @@ export const meta: MetaFunction = () => ({
 });
 
 export default function App() {
+
   return (
     <html lang="en">
       <head>
         <Meta />
         <Links />
+        <script crossOrigin="" src="https://unpkg.com/@daily-co/daily-js"></script>
       </head>
       <body>
         <Outlet />
