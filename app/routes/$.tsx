@@ -44,17 +44,27 @@ export default function Room() {
   useEffect(() => {
     const DAILY_IFRAME = document.getElementById("frame")
     let callFrame = DailyIFrame.wrap(DAILY_IFRAME);
-    callFrame.join({ url: roomUrl })
-    callFrame.on('joined-meeting', () => {
-      setTimeout(() => {
-        callFrame.getNetworkStats().then((stats) => console.log(stats))
-      }, 15000)
-
-    })
+    callFrame.join({ url: roomUrl }).then((participants) => {
+      callFrame.getMeetingSession().then((meetingSession) => {
+        setInterval(() => {
+          callFrame.getNetworkStats().then((stats) => {
+            let payload = {
+              room: roomUrl,
+              meetingSessionId: meetingSession.meetingSession.id,
+              sessionId: participants.local.session_id,
+              stats: stats.stats
+            }
+            if(payload.stats.latest.recvBitsPerSecond > 0) {
+              navigator.sendBeacon("/beacon", JSON.stringify(payload));
+            }
+          })
+        }, 1500);
+      });
+    });
   }, [roomUrl]);
 
   return (
-    <iframe id="frame" allow="microphone; camera; autoplay; display-capture">
+    <iframe id="frame" allow="microphone; camera; autoplay; display-capture" style={{width: "99.6vw", height: "92vh"}}>
     </iframe>
   );
 }
