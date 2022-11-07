@@ -1,4 +1,10 @@
-# Welcome to Remix!
+# Welcome to meet-remix!
+
+This is a Remix-based initial rewrite of [meet](https://github.com/rootvc/meet).
+
+This app depends on two environment variables being set (e.g. through a .env file):
+DAILY_TOKEN, your daily.co API token
+BEACON_URL, the url to a network stats collector
 
 - [Remix Docs](https://remix.run/docs)
 
@@ -7,6 +13,7 @@
 From your terminal:
 
 ```sh
+npm install
 npm run dev
 ```
 
