@@ -5,9 +5,10 @@ import { useEffect } from "react";
 import DailyIFrame from "@daily-co/daily-js";
 
 export const loader: LoaderFunction = async ({ params }) => {
-  let roomName = "meet-" + params["*"];
-  let token = process.env.DAILY_TOKEN;
-  let apiUrl = "https://api.daily.co/v1/rooms/";
+  const roomName = "meet-" + params["*"];
+  const token = process.env.DAILY_TOKEN;
+  const apiUrl = "https://api.daily.co/v1/rooms/";
+  const beaconUrl = process.env.BEACON_URL;
 
   let res = await fetch(apiUrl, {
     method: "POST",
@@ -33,6 +34,8 @@ export const loader: LoaderFunction = async ({ params }) => {
     throw new Error(data["info"]);
   }
 
+  data["beaconUrl"] = beaconUrl;
+
   return json( data );
 }
 
@@ -40,6 +43,7 @@ export default function Room() {
 
   const roomSettings = useLoaderData();
   const roomUrl = roomSettings["url"];
+  const beaconUrl = roomSettings["beaconUrl"];
 
   useEffect(() => {
     const DAILY_IFRAME = document.getElementById("frame")
@@ -55,7 +59,7 @@ export default function Room() {
               stats: stats.stats
             }
             if(payload.stats.latest.recvBitsPerSecond > 0) {
-              navigator.sendBeacon("/beacon", JSON.stringify(payload));
+              navigator.sendBeacon(beaconUrl, JSON.stringify(payload));
             }
           })
         }, 1500);
