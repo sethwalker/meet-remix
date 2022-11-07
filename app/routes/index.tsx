@@ -1,6 +1,11 @@
 import { Form } from "@remix-run/react";
 import { redirect } from "@remix-run/node";
 
+/*
+When the form submits it calls this function
+which will redirect to a url with the room
+name appended to the path
+*/
 export async function action({ request }) {
   const body = await request.formData();
   const room = body.get("roomName");
